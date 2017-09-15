@@ -20,6 +20,7 @@ int main(int argc, char** argv){
 
 
   // Yep, that's a bona fide triple pointer
+  // This makes sense when you remember we have many images, a la images[ImageNo][x][y]
   cell*** images = calloc(1024, sizeof(cell**));
   for(int ii = 0; ii < 1024; ii++){
     images[ii] = alloc_img(img_buffer, ii);
@@ -74,8 +75,4 @@ int main(int argc, char** argv){
   }
 
   free(img_buffer);
-}
-
-void process_chunk(cell* buffer, int buf_size, int frames){
-
 }

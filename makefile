@@ -1,8 +1,11 @@
-CFLAGS+= -std=c99 -g -O3
+# CFLAGS+= -std=c99 -g -O3
 
 # by uncommenting this line the preprocessor will see #ifdef DEBUG as true
 # CFLAGS+= -DDEBUG
-objects = CA.o bitmap.o RPS.o
+util_objects = CA.o bitmap.o
+serial_objects = RPS.o
+parallel_objects = RPS_MPI.o
+
 SHELL := /bin/bash
 
 # When running "make" in your terminal, the first target will be chosen.
@@ -10,8 +13,14 @@ SHELL := /bin/bash
 # name : [stuff I need to make this target]
 
 # In this case the dependencies are easy to figure out, so I will not elaborate further
-all : $(objects)
-	gcc $(objects) -o myProgram
+parallel: $(util_objects) $(parallel_objects)
+	mpicc $(util_objects) $(parallel_objects) -o parallelRPS
+
+serial : $(util_objects) $(serial_objects)
+	gcc $(util_objects) $(serial_objects) -o serialRPS
+
+RPS_MPI.o: RPS_MPI.c RPS_MPI.h
+	mpicc -c RPS_MPI.c RPS_MPI.h
 
 # In this target [stuff I need to make this target] is two other targets, namely clean and all
 # This command simply runs the clean target, then the all target, thus recompiling everything.
@@ -28,4 +37,3 @@ clean :
 .PHONY : video
 video : clean all
 	./myProgram && ffmpeg -framerate 60 -i data/CA-%000d.bmp -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
-

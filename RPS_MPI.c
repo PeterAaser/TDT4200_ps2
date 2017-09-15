@@ -9,7 +9,7 @@ void initialize();
 void initialize_petri();
 void exchange_borders();
 void iterate_CA();
-void gather_image();
+void gather_petri();
 void create_types();
 
 int rank;
@@ -27,7 +27,7 @@ int p_my_y_dim;
 
 int p_north, p_south, p_east, p_west;
 
-// The dimensions for the process local image
+// The dimensions for the process local petri
 int p_local_petri_x_dim;
 int p_local_petri_y_dim;
 
@@ -94,6 +94,12 @@ int main(int argc, char** argv){
 
   MPI_Cart_shift(cart_comm, 0, 1, &p_north, &p_south);
   MPI_Cart_shift(cart_comm, 1, 1, &p_west, &p_east);
+
+  p_x_dims = dims[0];
+  p_y_dims = dims[1];
+
+  p_my_x_dim = coords[0];
+  p_my_y_dim = coords[1];
   ////////////////////////////////
   ////////////////////////////////
 
@@ -129,12 +135,12 @@ int main(int argc, char** argv){
   /* } */
 
 
-  gather_image();
+  gather_petri();
 
   MPI_Finalize();
 
   if(rank==0){
-    // TODO: Write image
+    // TODO: Write petri
   }
 
   // You should probably make sure to free your memory here
@@ -195,18 +201,11 @@ void create_types(){
 
 void initialize(){
   //TODO: assign the following to something more useful than 0
-  p_x_dims = 0;
-  p_y_dims = 0;
-
-  p_my_x_dim = 0;
-  p_my_y_dim = 0;
-
   p_local_petri_x_dim = 0;
   p_local_petri_y_dim = 0;
 
-  // TODO ME: swap out
-  /* local_petri_A = malloc(0*sizeof(int****************)); */
-  /* local_petri_B = malloc(0*sizeof(int****************)); */
+  local_petri_A = malloc(0*sizeof(int****************));
+  local_petri_B = malloc(0*sizeof(int****************));
 }
 
 void initialize_petri(){
@@ -221,6 +220,6 @@ void iterate_CA(){
   //TODO: Iterate the cellular automata one step
 }
 
-void gather_image(){
-  //TODO: Gather the final image for process rank 0
+void gather_petri(){
+  //TODO: Gather the final petri for process rank 0
 }

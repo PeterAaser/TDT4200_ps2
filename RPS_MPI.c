@@ -34,16 +34,10 @@ int p_local_petri_y_dim;
 MPI_Comm cart_comm;
 
 // some datatypes, useful for sending data with somewhat less primitive semantics
-MPI_Datatype border_row_t;
-MPI_Datatype border_col_t;
-MPI_Datatype mpi_cell_t;
-
-// TODO ME: needed?
-MPI_Datatype local_petri_t;
-MPI_Datatype petri_t;
-
-// The complete petri dish.
-cell* petri;
+MPI_Datatype border_row_t;  // TODO: Implement this
+MPI_Datatype border_col_t;  // TODO: Implement this
+MPI_Datatype local_petri_t; // Already implemented
+MPI_Datatype mpi_cell_t;    // Already implemented
 
 // Each process is responsible for one part of the petri dish.
 // Since we can't update the petri-dish in place each process actually
@@ -62,16 +56,6 @@ int main(int argc, char** argv){
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  initialize();
-
-
-  if(rank == 0){
-    cell* init_petri = malloc(IMG_X*IMG_Y*sizeof(cell));
-    for(int ii = 0; ii < 10000; ii++){
-
-    }
-  }
 
 
   ////////////////////////////////
@@ -103,36 +87,34 @@ int main(int argc, char** argv){
   ////////////////////////////////
   ////////////////////////////////
 
+  initialize();
 
-  // allocate buffers
-  int local_petri_size = (p_local_petri_x_dim + 2*BORDER_SIZE) * (p_local_petri_y_dim + 2*BORDER_SIZE);
-  local_petri_A = malloc(sizeof(cell)*local_petri_size);
-  local_petri_B = malloc(sizeof(cell)*local_petri_size);
 
   create_types();
 
 
-  // A super basic example
-  /* cell* my_test_cell = malloc(10*sizeof(cell)); */
-  /* for(int ii = 0; ii < 10; ii++){ */
-  /*   my_test_cell[ii].strength = ii; */
-  /*   my_test_cell[ii].color = rank; */
-  /* } */
+  // A super basic example sending some data:
 
-  /* if(rank == 0){ */
-  /*   cell* rec_buf = malloc(sizeof(cell)*10); */
-  /*   for(int ii = 0; ii < size - 1; ii++){ */
-  /*     MPI_Recv(rec_buf, 10, mpi_cell_t, ii+1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); */
-  /*     printf("receiving from rank %d: \n", ii+1); */
-  /*     for(int jj = 0; jj < 10; jj++){ */
-  /*       printf("[%d, %d]  ", rec_buf[jj].color, rec_buf[jj].strength); */
-  /*     } */
-  /*     printf("\n"); */
-  /*   } */
-  /* } */
-  /* else{ */
-  /*   MPI_Send(my_test_cell, 10, mpi_cell_t, 0, 0, MPI_COMM_WORLD); */
-  /* } */
+  // cell* my_test_cell = malloc(10*sizeof(cell));
+  // for(int ii = 0; ii < 10; ii++){
+  //   my_test_cell[ii].strength = ii;
+  //   my_test_cell[ii].color = rank;
+  // }
+
+  // if(rank == 0){
+  //   cell* rec_buf = malloc(sizeof(cell)*10);
+  //   for(int ii = 0; ii < size - 1; ii++){
+  //     MPI_Recv(rec_buf, 10, mpi_cell_t, ii+1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  //     printf("receiving from rank %d: \n", ii+1);
+  //     for(int jj = 0; jj < 10; jj++){
+  //       printf("[%d, %d]  ", rec_buf[jj].color, rec_buf[jj].strength);
+  //     }
+  //     printf("\n");
+  //   }
+  // }
+  // else{
+  //   MPI_Send(my_test_cell, 10, mpi_cell_t, 0, 0, MPI_COMM_WORLD);
+  // }
 
 
   gather_petri();
@@ -140,7 +122,7 @@ int main(int argc, char** argv){
   MPI_Finalize();
 
   if(rank==0){
-    // TODO: Write petri
+    // TODO: Write the petri to an image
   }
 
   // You should probably make sure to free your memory here
@@ -182,19 +164,6 @@ void create_types(){
   ////////////////////////////////
 
 
-
-  ////////////////////////////////
-  ////////////////////////////////
-  // A message for sending stuff
-  int stride = IMG_Y;
-  int count = 0;
-  int blocklength = 0;
-  MPI_Type_vector(count, blocklength, stride, mpi_cell_t, &petri_t);
-  MPI_Type_commit(&petri_t);
-  ////////////////////////////////
-  ////////////////////////////////
-
-
   //TODO: Create MPI types for border exchange
 }
 
@@ -204,13 +173,15 @@ void initialize(){
   p_local_petri_x_dim = 0;
   p_local_petri_y_dim = 0;
 
+  // TODO: When allocating these buffers, keep in mind that you might need to allocate a little more
+  // than just your piece of the petri.
   local_petri_A = malloc(0*sizeof(int****************));
-  local_petri_B = malloc(0*sizeof(int****************));
+  local_petri_B = malloc(0*sizeof("It's 2017, but we have yet to come up with a systems programming language where inane garbage like this leads to a compiler error. Come on..."));
+
+  // TODO: Randomly perturb the local dish. Only perturb cells that belong to your process,
+  // leave border pixels white.
 }
 
-void initialize_petri(){
-  //TODO: Initialize a petri dish, perturb it a little
-}
 
 void exchange_borders(){
   //TODO: Exchange borders inbetween each step

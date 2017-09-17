@@ -5,6 +5,11 @@ void process_chunk(cell* buffer, int buf_size, int frames);
 
 int main(int argc, char** argv){
 
+  printf("WARNING: THIS CODE WILL GENERATE A TON OF DATA BEFORE MAKING THE VIDEO\n");
+  printf("THE FRAMES WILL BE STORED IN THE data/ DIRECTORY. YOU MUST DELETE THIS AFTER RUNNING THIS PROGRAM\n");
+  printf("Press any key to continue\n");
+  getchar();
+
   srand(time(NULL));
   cell* img_buffer = malloc(BUF_SIZE);
   if(img_buffer == NULL){

@@ -1,7 +1,10 @@
-* PS2 programming exercise
+* PS2 Part 2, programming exercise
+  THIS ASSIGNMENT MUST BE DONE INDIVIDUALLY.
+  IT IS BOTH MANDATORY AND GRADED, COUNTING 10% OF YOUR FINAL GRADE.
+  COLLABORATION AND/OR PLAGIARISATION IS NOT TOLERATED!
 ** Description
-   In this exercise you will implement a "rock paper scissors" cellular automata.
-   Cellular automatas model processes where each point at some timestep N+1 is a function of
+   In this exercise you will implement a "rock paper scissors" cellular automata (CA).
+   Cellular Automata models processes where each point at some timestep N+1 is a function of
    the point and its immediate neighborhood at timestep N. The most known cellular automata is
    conways game of life, capable of creating fascinating patterns with a very simple ruleset.
    https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
